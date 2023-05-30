@@ -1,0 +1,100 @@
+/* CSS Styles for Customer List - Dark Theme */
+
+/* Set the background color and font family for the entire page */
+body {
+  background-color: #222;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  color: #fff;
+}
+
+/* Style the heading */
+h1 {
+  color: #c26262;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Style the link */
+a {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #03920f;
+  text-decoration: none;
+}
+
+/* Style the customer list */
+.customer-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Style the customer item */
+.customer-item {
+  background-color: #333;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.customer-item p {
+  margin: 0;
+  color: #fff;
+}
+
+.customer-item button {
+  background-color: #03920f;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.customer-item button:hover {
+  background-color: #f44336;
+}
+
+/* Style the search button */
+button {
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #03920f;
+}
+/* Style the input field */
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+/* Style the search button */
+button {
+  background-color: #03920f;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #03920f;
+}

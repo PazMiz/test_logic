@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <title>Customer Add System</title>
+    <link rel="stylesheet" href="newcust.css">
+</head>
+
+<body>
+    <h1>Library: Add Customer</h1>
+    <!-- Add a new customer -->
+    <div id="customerssss">
+        <h1>ALL CUSTOMERS</h1>
+    </div>
+
+    <div class="container">
+        <form id="customer_form">
+            <div class="input-group">
+                <label for="customer_name">Name:</label>
+                <input type="text" id="customer_name" placeholder="ENTER YOUR NAME">
+            </div>
+            <div class="input-group">
+                <label for="customer_city">City:</label>
+                <input type="text" id="customer_city" placeholder="ENTER YOUR CITY">
+            </div>
+            <div class="input-group">
+                <label for="customer_age">Age:</label>
+                <input type="number" id="customer_age" placeholder="ENTER YOUR AGE">
+            </div>
+            <div class="button-group">
+                <button type="button" onclick="validateAndAddCustomer()">Add new Customer</button>
+            </div>
+        </form>
+        <br><br><br>
+        <a href="viewCustomers.html">View All Customers</a>
+        <a href="index.html">Home Page</a>
+        <a href="loanbook.html">View Loan</a>
+    </div>
+
+    <script>
+        const MY_SERVER = 'http://127.0.0.1:5000';
+
+        const validateAndAddCustomer = async () => {
+            const name = document.getElementById('customer_name').value;
+            const city = document.getElementById('customer_city').value;
+            const age = document.getElementById('customer_age').value;
+
+            if (name.trim() === '') {
+                alert('Please enter a name');
+                return;
+            }
+
+            if (city.trim() === '') {
+                alert('Please enter a city');
+                return;
+            }
+
+            if (age.trim() === '') {
+                alert('Please enter an age');
+                return;
+            }
+
+            let data = {
+                name: name,
+                city: city,
+                age: age
+            };
+
+            try {
+                const response = await axios.post(`${MY_SERVER}/customers/new`, data);
+                console.log(response.data); // Optional: handle the response as needed
+                alert('New customer added successfully!'); // Show an alert for successful addition
+                document.getElementById('customer_form').reset(); // Reset the form
+            } catch (error) {
+                console.error(error); // Optional: handle the error as needed
+            }
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,102 @@
+/* CSS Styles for Book Management System - Dark Theme */
+
+/* Overall styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #333;
+    color: #fff;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  h2 {
+    margin-top: 20px;
+    color: #fff;
+  }
+  
+  a {
+    display: block;
+    margin-top: 20px;
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  /* Form styles */
+  form {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-top: 10px;
+    color: #fff;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    border-radius: 3px;
+    border: 1px solid #777;
+    background-color: #555;
+    color: #fff;
+    font-size: 14px; /* Adjust the font size as needed */
+  }
+  
+  button[type="submit"] {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  /* Book Card styles */
+  .book-card {
+    border: 1px solid #777;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #444;
+  }
+  
+  .delete-button,
+  .edit-button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .delete-button {
+    background-color: #03920f;
+  }
+  
+  .edit-button {
+    background-color: #03920f;
+  }
+  
+  /* Book List styles */
+  #book-list {
+    margin-top: 20px;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 600px) {
+    form,
+    .book-card {
+      width: 100%;
+    }
+  }
+  

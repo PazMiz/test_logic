@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <title>List Customer Libary </title>
+  <link rel="stylesheet" href="viewcust.css">
+
+</head>
+
+<body>
+  <div id="customers">
+    <h1 style="color: rgb(16, 16, 21);">Paz Customers List Of The Library</h1>
+    <a href="index.html">Main Page</a>
+    <a href="newCustomer.html">Add Customer</a>
+    <input type="text" id="search-name" placeholder="Enter customer name">
+    <button onclick="searchCustomer()">Search Customer</button>
+    <ul class="customer-list" id="customer-list"></ul>
+  </div>
+
+  <script>
+    const MY_SERVER = 'http://127.0.0.1:5000';
+
+    const searchCustomer = () => {
+      const searchName = document.getElementById('search-name').value;
+      axios.get(`${MY_SERVER}/customers/search/${searchName}`)
+        .then(response => {
+          const customers = response.data;
+          displayCustomers(customers);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    };
+
+    const displayCustomers = (customers) => {
+      const customerList = document.getElementById('customer-list');
+      customerList.innerHTML = '';
+
+      customers.forEach(customer => {
+        const customerItem = document.createElement('li');
+        customerItem.classList.add('customer-item');
+        customerItem.innerHTML = `<p>ID: ${customer.id}</p>
+                                  <p>Name: ${customer.name}</p>
+                                  <p>City: ${customer.city}</p>
+                                  <p>Age: ${customer.age}</p>
+                                  <button onclick="deleteCustomer(${customer.id})">DELETE Customer</button>`;
+        customerList.appendChild(customerItem);
+      });
+    };
+
+    const getCustomers = () => {
+      axios.get(`${MY_SERVER}/customers`)
+        .then(response => {
+          const customers = response.data;
+          displayCustomers(customers);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    };
+    getCustomers();
+
+    const deleteCustomer = async (id) => {
+      try {
+        await axios.delete(`${MY_SERVER}/customers/delete/${id}`);
+        getCustomers();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+  </script>
+
+</body>
+
+</html>

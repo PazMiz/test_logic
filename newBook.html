@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <title>Book Management System</title>
+    <link rel="stylesheet" href="book.css">
+    <br><br><br>
+    <a href="index.html">Return to Home Page</a>
+    <a href="loanbook.html">View all the loans</a>
+
+</head>
+
+<body>
+    <h1>Paz Library: Add BOOK</h1>
+    <!-- Add a new book -->
+    <div id="booksContainer">
+        <h2>ALL BOOKS</h2>
+    </div>
+    <h2>Add a new book:</h2>
+    <form id="new-book-form" onsubmit="event.preventDefault(); validateAndAddBook();">
+        <label for="book_name">BookName:</label>
+        <input type="text" id="book_name" placeholder="ENTER BOOK TITLE" required>
+        <br>
+        <label for="writer">Writer:</label>
+        <input type="text" id="writer" placeholder="ENTER BOOK WRITER" required>
+        <br>
+        <label for="year_published">Year Published:</label>
+        <input type="number" id="year_published" placeholder="ENTER BOOK YEAR" required>
+        <br>
+        <label for="book_loan">Loan:</label>
+        <select id="book_loan" name="options">
+            <option value="1">up to 10 days</option>
+            <option value="2">up to 5 days</option>
+            <option value="3">up to 2 days</option>
+        </select>
+        <button type="submit">Add new book</button>
+    </form>
+    <form id="search-form" onsubmit="event.preventDefault(); searchBooks();">
+        <label for="search-name">Search by Book Name:</label>
+        <input type="text" id="search-name" placeholder="Enter book name" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="book-list"></div>
+
+    <script>
+        const MY_SERVER = 'http://127.0.0.1:5000';
+
+        async function newBook(bookName, writer, yearPublished, bookLoan) {
+            const data = {
+                bookname: bookName,
+                writer: writer,
+                year_published: yearPublished,
+                book_loan: bookLoan
+            };
+
+            try {
+                const response = await axios.post(`${MY_SERVER}/books/new`, data);
+
+                if (response.status === 200) {
+                    alert("Book added successfully!");
+                    displayBooks();
+                } else {
+                    alert("Error adding book.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Error adding book.");
+            }
+        }
+
+        async function displayBooks() {
+            try {
+                const response = await axios.get(`${MY_SERVER}/books`);
+
+                const books = response.data;
+
+                const booksContainer = document.getElementById('booksContainer');
+                booksContainer.innerHTML = '<h2>ALL BOOKS</h2>';
+
+                for (let index = 0; index < books.length; index++) {
+                    const obj = books[index];
+                    const bookCard = document.createElement('div');
+                    bookCard.className = 'book-card';
+                    bookCard.innerHTML = `
+                        <p>ID: ${obj.id}</p>
+                        <p>bookname: ${obj.bookname}</p>
+                        <p>writer: ${obj.writer}</p>
+                        <p>Year Published: ${obj.year_published}</p>
+                        <p>Loan: ${getLoanText(obj.book_loan)}</p>
+                        <button class="delete-button" onclick="deleteBook(${obj.id})">DELETE</button>
+                        <button class="edit-button" onclick="editBook(${obj.id})">EDIT</button>
+                    `;
+                    booksContainer.appendChild(bookCard);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function getLoanText(loanValue) {
+            switch (loanValue) {
+                case '1':
+                    return 'up to 10 days';
+                case '2':
+                    return 'up to 5 days';
+                case '3':
+                    return 'up to 2 days';
+                default:
+                    return 'Loan information unavailable';
+            }
+        }
+
+        async function deleteBook(bookId) {
+            try {
+                const response = await axios.delete(`${MY_SERVER}/books/delete/${bookId}`);
+                console.log(response.data); // Optional: handle the response as needed
+                if (response.status === 200) {
+                    alert("Book deleted successfully!");
+                    displayBooks(); // Update the book list after deletion
+                } else {
+                    alert("Error deleting book.");
+                }
+            } catch (error) {
+                console.error(error); // Optional: handle the error as needed
+                alert("Error deleting book.");
+            }
+        }
+
+        async function editBook(bookId) {
+            const book_name = prompt("Enter the updated book name:");
+            const writer = prompt("Enter the updated writer:");
+            const year_published = prompt("Enter the updated year published:");
+            const book_loan = prompt("Enter the updated loan (1: up to 10 days, 2: up to 5 days, 3: up to 2 days):");
+
+            const data = {
+                bookname: book_name,
+                writer: writer,
+                year_published: year_published,
+                book_loan: book_loan
+            };
+
+            try {
+                const response = await axios.put(`${MY_SERVER}/books/update/${bookId}`, data);
+                console.log(response.data); // Optional: handle the response as needed
+                if (response.status === 200) {
+                    alert("Book updated successfully!");
+                    displayBooks(); // Update the book list after updating
+                } else {
+                    alert("Error updating book.");
+                }
+            } catch (error) {
+                console.error(error); // Optional: handle the error as needed
+                alert("Error updating book.");
+            }
+        }
+
+        const searchBooks = () => {
+            const searchName = document.getElementById('search-name').value;
+
+            if (searchName.trim() === '') {
+                return;
+            }
+
+            axios.get(`${MY_SERVER}/books/search/${searchName}`)
+                .then(response => {
+                    const books = response.data;
+                    displayBooksBySearch(books);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        };
+
+        function displayBooksBySearch(books) {
+            const bookList = document.getElementById('book-list');
+            bookList.innerHTML = '';
+
+            books.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.innerHTML = `
+                    <p>Book ID: ${book.id}</p>
+                    <p>Book Name: ${book.bookname}</p>
+                    <p>Writer: ${book.writer}</p>
+                    <p>Year Published: ${book.year_published}</p>
+                    <p>Loan: ${getLoanText(book.book_loan)}</p>
+                    <button class="edit-button" onclick="editBook(${book.id})">EDIT</button>
+                    <button class="delete-button" onclick="deleteBook(${book.id})">DELETE</button>
+                `;
+                bookList.appendChild(bookItem);
+            });
+        }
+
+        function validateAndAddBook() {
+            const bookNameInput = document.getElementById('book_name');
+            const writerInput = document.getElementById('writer');
+            const yearPublishedInput = document.getElementById('year_published');
+            const bookLoanInput = document.getElementById('book_loan');
+
+            const bookName = bookNameInput.value;
+            const writer = writerInput.value;
+            const yearPublished = yearPublishedInput.value;
+            const bookLoan = bookLoanInput.value;
+
+            if (bookName.trim() === '') {
+                alert("Please enter the book title.");
+                bookNameInput.focus();
+                return;
+            }
+
+            if (writer.trim() === '') {
+                alert("Please enter the book writer.");
+                writerInput.focus();
+                return;
+            }
+
+            if (yearPublished.trim() === '') {
+                alert("Please enter the year published.");
+                yearPublishedInput.focus();
+                return;
+            }
+
+            if (bookLoan.trim() === '') {
+                alert("Please select the loan option.");
+                bookLoanInput.focus();
+                return;
+            }
+
+            newBook(bookName, writer, yearPublished, bookLoan);
+        }
+
+        // Initial display of books
+        displayBooks();
+    </script>
+</body>
+
+</html>
